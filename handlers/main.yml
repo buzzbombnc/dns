@@ -1,0 +1,3 @@
+---
+- name: restart named
+  command: "/etc/rc.d/rc.named restart"

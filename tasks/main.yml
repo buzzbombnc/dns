@@ -1,0 +1,18 @@
+---
+- name: Install bind
+  slackpkg: name=bind state=present
+
+- name: Create 'named' group
+  group: name=named gid=53 state=present system=yes
+
+- name: Create 'named' user
+  user: name=named group=named uid=53 state=present system=yes home=/var/named shell=/sbin/nologin createhome=no
+
+- name: Reconfigure named to use user 'named'
+  template: src=default.named.j2 dest=/etc/default/named owner=root group=root mode=0644
+
+- name: chown directories
+  file: path={{ item }} state=directory owner=named group=named recurse=yes
+  with_items:
+    - /var/run/named
+    - /var/named
