@@ -1,0 +1,19 @@
+---
+# IPv4 addresses to listen on.
+named_listen_on:
+    - any
+# IPv6 addresses to listen on.
+named_listen_on_v6:
+    - any
+
+# Addresses that can make generate recursive queries.  (I.e. caching/forwarding)
+named_allow_recursion:
+    - localhost
+    - localnets
+
+# The forward policy.  "first" or "only".
+named_forward_policy: only
+# Required if 'named_forward_policy' is set.
+named_forwarders:
+  - 8.8.8.8
+  - 8.8.4.4

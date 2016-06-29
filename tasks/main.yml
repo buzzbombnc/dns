@@ -11,8 +11,14 @@
 - name: Reconfigure named to use user 'named'
   template: src=default.named.j2 dest=/etc/default/named owner=root group=root mode=0644
 
-- name: chown directories
+- name: Chown named directories
   file: path={{ item }} state=directory owner=named group=named recurse=yes
   with_items:
     - /var/run/named
     - /var/named
+
+- name: Enable named
+  file: path=/etc/rc.d/rc.bind mode=0755
+
+- name: Create /etc/named.conf file
+  template: src=named.conf.j2 dest=/etc/named.conf owner=root group=root mode=0644 validate='/usr/sbin/named-checkconf %s'

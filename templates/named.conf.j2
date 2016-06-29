@@ -1,0 +1,43 @@
+{{ ansible_managed | comment }}
+
+# These addresses can query the cache.
+acl recurse-queries { {% for a in named_allow_recursion -%}{{ a }}; {% endfor -%} };
+
+options {
+    listen-on { {% for a in named_listen_on -%}{{ a }}; {% endfor -%} };
+    listen-on-v6 { {% for a in named_listen_on_v6 -%}{{ a }}; {% endfor -%} };
+
+    directory "/var/named";
+    
+    allow-query-cache { recurse-queries; };
+    allow-recursion { recurse-queries; };
+
+{% if named_forward_policy|default() %}
+    forward {{ named_forward_policy }};
+    forwarders { {% for a in named_forwarders -%}{{ a }}; {% endfor -%} };
+{% endif %}
+};
+
+{% for x in dns_test|default(['1','2']) %}
+# {{ x }}
+{% endfor %}
+
+// 
+// a caching only nameserver config
+// 
+zone "." IN {
+	type hint;
+	file "caching-example/named.root";
+};
+
+zone "localhost" IN {
+	type master;
+	file "caching-example/localhost.zone";
+	allow-update { none; };
+};
+
+zone "0.0.127.in-addr.arpa" IN {
+	type master;
+	file "caching-example/named.local";
+	allow-update { none; };
+};
