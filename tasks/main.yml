@@ -16,6 +16,11 @@
   with_items:
     - /var/run/named
     - /var/named
+    - /var/named/slave
+    - /var/named/master
+
+- name: Chgrp /etc/rndc.key
+  file: path=/etc/rndc.key group=named mode=0640
 
 - name: Enable named
   file: path=/etc/rc.d/rc.bind mode=0755
