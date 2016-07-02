@@ -1,0 +1,74 @@
+#!/bin/sh
+#
+# Update the nameserver cache information file once per month.
+# This is run automatically by a cron entry.
+#
+# Updated by Ken Treadway for my setup.
+#
+# From: http://tldp.org/HOWTO/DNS-HOWTO-8.html
+#
+# Original by Al Longyear
+# Updated for BIND 8 by Nicolai Langfeldt
+# Miscelanious error-conditions reported by David A. Ranch
+# Ping test suggested by Martin Foster
+# named up-test suggested by Erik Bryer.
+#
+(
+ echo "To: root <root>"
+ echo "From: system <root>"
+
+ PATH=/sbin:/usr/sbin:/bin:/usr/bin:
+ export PATH
+ # NOTE: /var/named must be writable only by trusted users or this script 
+ # will cause root compromise/denial of service opportunities.
+ cd /var/named 2>/dev/null || {
+    echo "Subject: Cannot cd to /var/named, error $?"
+    echo
+    echo "The subject says it all"
+    exit 1
+ }
+
+ # Are we online?  Ping a server at your ISP
+ case `ping -qnc 1 8.8.8.8 2>&1` in
+   *'100% packet loss'*)
+        echo "Subject: root.hints NOT updated.  The network is DOWN."
+        echo
+        echo "The subject says it all"
+        exit 1
+        ;;
+ esac
+
+ dig @e.root-servers.net . ns >root.hints.new 2> errors
+
+ case `cat root.hints.new` in
+   *NOERROR*)
+        # It worked
+        :;;
+   *)
+        echo "Subject: The root.hints file update has FAILED."
+        echo
+        echo "The root.hints update has failed"
+        echo "This is the dig output reported:"
+        echo
+        cat root.hints.new errors
+        exit 1
+        ;;
+ esac
+
+ echo "Subject: The root.hints file has been updated"
+ echo
+ echo "The root.hints file has been updated to contain the following information:"
+ echo
+ cat root.hints.new
+
+ chown named.named root.hints.new
+ chmod 444 root.hints.new
+ rm -f root.hints.old errors
+ mv root.hints root.hints.old
+ mv root.hints.new root.hints
+ rndc reload
+ echo
+ echo "The nameserver has been restarted to ensure that the update is complete."
+ echo "The previous root.hints file is now called /var/named/root.hints.old."
+) 2>&1 | /usr/lib/sendmail -t
+exit 0
