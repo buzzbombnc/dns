@@ -1,3 +1,6 @@
 ---
+- name: update-root-hints
+  command: "/etc/cron.monthly/update-root-hints"
+
 - name: restart named
   command: "/etc/rc.d/rc.named restart"

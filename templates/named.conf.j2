@@ -8,7 +8,7 @@ options {
     listen-on-v6 { {% for a in named_listen_on_v6 -%}{{ a }}; {% endfor -%} };
 
     directory "/var/named";
-    
+
     allow-query-cache { recurse-queries; };
     allow-recursion { recurse-queries; };
 
@@ -16,28 +16,27 @@ options {
     forward {{ named_forward_policy }};
     forwarders { {% for a in named_forwarders -%}{{ a }}; {% endfor -%} };
 {% endif %}
+
+    # Disable nosy version output.
+    version none;
+    hostname none;
+    server-id none;
 };
 
-{% for x in dns_test|default(['1','2']) %}
-# {{ x }}
-{% endfor %}
-
-// 
-// a caching only nameserver config
-// 
+# Root hints
 zone "." IN {
-	type hint;
-	file "caching-example/named.root";
+    type hint;
+    file "root.hints";
 };
 
-zone "localhost" IN {
-	type master;
-	file "caching-example/localhost.zone";
-	allow-update { none; };
-};
+#zone "localhost" IN {
+#	type master;
+#	file "caching-example/localhost.zone";
+#	allow-update { none; };
+#};
 
-zone "0.0.127.in-addr.arpa" IN {
-	type master;
-	file "caching-example/named.local";
-	allow-update { none; };
-};
+#zone "0.0.127.in-addr.arpa" IN {
+#	type master;
+#	file "caching-example/named.local";
+#	allow-update { none; };
+#};

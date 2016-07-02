@@ -20,5 +20,10 @@
 - name: Enable named
   file: path=/etc/rc.d/rc.bind mode=0755
 
+- name: Copy 'update-root-hints' file to server
+  copy: src=update-root-hints dest=/etc/cron.monthly owner=root group=root mode=0755
+  notify:
+    - update-root-hints
+
 - name: Create /etc/named.conf file
   template: src=named.conf.j2 dest=/etc/named.conf owner=root group=root mode=0644 validate='/usr/sbin/named-checkconf %s'
