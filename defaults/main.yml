@@ -17,3 +17,42 @@ named_forward_policy: only
 named_forwarders:
   - 8.8.8.8
   - 8.8.4.4
+
+# Default times for SOA records.
+# DNS secondary check time.
+named_soa_refresh: 3600
+# Secondary wait on error time.
+named_soa_retry: 600
+# Secondary stops answering after this long with no updates.
+named_soa_expire: 86400
+# Minimum TTL for all records in the file.
+named_soa_ttl: 3600
+
+# The zones for populating.
+named_zones:
+  asylum.buzzbomb.net:
+    type: slave
+    masters:
+      - 192.168.168.40
+  local:
+    type: master
+    allow_transfer:
+      - 192.168.168.4
+    soa_contact: 'test.local.'
+    soa_ns: 'ns1.local.'
+    serial: 123
+    records:
+      - { name: '', type: NS, value: ns1.local. }
+      - name: ns1.local.
+        type: A
+        ttl: 111
+        value: 192.168.92.128
+      - name: local.
+        type: MX
+        ttl: 333
+        priority: 10
+        value: mx.local.
+      - name: mx.local.
+        type: A
+        ttl: 222
+        value: 1.2.3.4

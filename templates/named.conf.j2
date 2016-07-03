@@ -11,6 +11,7 @@ options {
 
     allow-query-cache { recurse-queries; };
     allow-recursion { recurse-queries; };
+    allow-transfer { none; };
 
 {% if named_forward_policy|default() %}
     forward {{ named_forward_policy }};
@@ -28,6 +29,21 @@ zone "." IN {
     type hint;
     file "root.hints";
 };
+
+{% for name, val in named_zones|default({})|dictsort %}
+zone "{{ name }}" IN {
+{% if val.type == "slave" %}
+    type slave;
+    file "slave/{{ name }}";
+    masters { {% for m in val.masters -%}{{ m }}; {% endfor -%} };
+{% elif val.type == "master" %}
+    type master;
+    file "master/{{ name }}";
+    allow-transfer { {% for a in val.allow_transfer|default(['none']) -%}{{ a }}; {% endfor -%} };
+{% endif %}
+};
+
+{% endfor %}
 
 #zone "localhost" IN {
 #	type master;

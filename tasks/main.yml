@@ -32,3 +32,8 @@
 
 - name: Create /etc/named.conf file
   template: src=named.conf.j2 dest=/etc/named.conf owner=root group=root mode=0644 validate='/usr/sbin/named-checkconf %s'
+
+- name: Create master zone files
+  template: src=named.zone.j2 dest="/var/named/master/{{ item.key }}" owner=named group=named mode=0644 validate='/usr/sbin/named-checkconf {{ item.key }} %s'
+  with_dict: "{{ named_zones|default({}) }}"
+  when: "item.value.type == 'master'"
