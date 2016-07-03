@@ -9,7 +9,7 @@ named_listen_on_v6:
 # Addresses that can make generate recursive queries.  (I.e. caching/forwarding)
 named_allow_recursion:
     - localhost
-    - localnets
+#    - localnets
 
 # The forward policy.  "first" or "only".
 named_forward_policy: only
@@ -29,30 +29,23 @@ named_soa_expire: 86400
 named_soa_ttl: 3600
 
 # The zones for populating.
-named_zones:
-  asylum.buzzbomb.net:
-    type: slave
-    masters:
-      - 192.168.168.40
-  local:
-    type: master
-    allow_transfer:
-      - 192.168.168.4
-    soa_contact: 'test.local.'
-    soa_ns: 'ns1.local.'
-    serial: 123
-    records:
-      - { name: '', type: NS, value: ns1.local. }
-      - name: ns1.local.
-        type: A
-        ttl: 111
-        value: 192.168.92.128
-      - name: local.
-        type: MX
-        ttl: 333
-        priority: 10
-        value: mx.local.
-      - name: mx.local.
-        type: A
-        ttl: 222
-        value: 1.2.3.4
+#named_zones:
+#  slave_zonename:
+#    type: slave
+#    masters:
+#      - 1.2.3.4
+#      - 4.3.2.1
+#  master_zonename:
+#    type: master
+#    allow_transfer:
+#      - 1.2.3.4
+#      - 4.3.2.1
+#    soa_contact: 'hostmaster.master_zonename.'
+#    soa_ns: 'ns1.master_zonename.'
+#    serial: 12345
+#    default_ttl: 1800
+#    records:
+#      #   name,     TTL,    class,  type,   value,  value
+#      - [ '',       '',     '',     'NS',           'ns1.master_zonename.' ]
+#      - [ 'ns1',    '',     'IN',   'A',            '1.2.3.5' ]
+#      - [ '',       '',     '',     'MX',   10,     'mx.master_zonename.' ]

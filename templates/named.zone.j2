@@ -1,6 +1,7 @@
 {{ ansible_managed | comment(decoration='; ') }}
 {% set value = item.value %}
 {% set records = item.value.records %}
+$TTL {{ value.default_ttl|default(value.soa_ttl)|default(named_soa_ttl)|mandatory }}
 @   IN   SOA   {{ value.soa_ns }}   {{ value.soa_contact }} (
     {{ value.serial }} ; serial number
     {{ value.soa_refresh|default(named_soa_refresh) }} ; refresh
@@ -9,7 +10,5 @@
     {{ value.soa_ttl|default(named_soa_ttl) }} ; min TTL
 )
 {% for r in records %}
-{{ r.name }}   {{ r.ttl|default() }}   IN   {{ r.type }}
-{%- if r.type.lower() == 'mx' %}   {{ r.priority }}{%- endif %}
-   {{ r.value }}
+{{ r|join("\t") }}
 {% endfor %}
