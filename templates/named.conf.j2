@@ -22,6 +22,10 @@ options {
     version none;
     hostname none;
     server-id none;
+
+{% for l in named_extra_options|default([]) %}
+    {{ l }}
+{% endfor %}
 };
 
 # Root hints
@@ -41,18 +45,9 @@ zone "{{ name }}" IN {
     file "master/{{ name }}";
     allow-transfer { {% for a in val.allow_transfer|default(['none']) -%}{{ a }}; {% endfor -%} };
 {% endif %}
+{% for l in val.extra_options|default([]) %}
+    {{ l }}
+{% endfor %}
 };
 
 {% endfor %}
-
-#zone "localhost" IN {
-#	type master;
-#	file "caching-example/localhost.zone";
-#	allow-update { none; };
-#};
-
-#zone "0.0.127.in-addr.arpa" IN {
-#	type master;
-#	file "caching-example/named.local";
-#	allow-update { none; };
-#};

@@ -27,6 +27,9 @@ named_soa_retry: 600
 named_soa_expire: 86400
 # Minimum TTL for all records in the file.
 named_soa_ttl: 3600
+# Extra option lines for the 'options' statement.
+#named_extra_options:
+#  - "min-refresh-time 300;"
 
 # The zones for populating.
 #named_zones:
@@ -49,3 +52,5 @@ named_soa_ttl: 3600
 #      - [ '',       '',     '',     'NS',           'ns1.master_zonename.' ]
 #      - [ 'ns1',    '',     'IN',   'A',            '1.2.3.5' ]
 #      - [ '',       '',     '',     'MX',   10,     'mx.master_zonename.' ]
+#    extra_options:
+#      - "update-policy local;"
