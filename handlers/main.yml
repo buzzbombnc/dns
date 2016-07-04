@@ -3,4 +3,4 @@
   command: "/etc/cron.monthly/update-root-hints"
 
 - name: restart named
-  command: "/etc/rc.d/rc.named restart"
+  command: "/etc/rc.d/rc.bind restart"
