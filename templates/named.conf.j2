@@ -1,5 +1,16 @@
 {{ ansible_managed | comment }}
 
+# Default logging to our dns.log.  Mind that daemon.log will get startup still.
+logging {
+  channel dns_syslog { syslog local3; severity info; };
+
+  category default { dns_syslog; default_debug; };
+{% if named_log_updates|default(false) %}
+  category update { dns_syslog; default_debug; };
+  category update-security { dns_syslog; default_debug; };
+{% endif %}
+};
+        
 # These addresses can query the cache.
 acl recurse-queries { {% for a in named_allow_recursion -%}{{ a }}; {% endfor -%} };
 

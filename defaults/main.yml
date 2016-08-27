@@ -1,4 +1,7 @@
 ---
+# Whether or not to log updates.
+named_log_updates: true
+
 # IPv4 addresses to listen on.
 named_listen_on:
     - any
