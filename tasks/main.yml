@@ -1,13 +1,4 @@
 ---
-- name: Install bind
-  slackpkg: name=bind state=present
-
-- name: Create 'named' group
-  group: name=named gid=53 state=present system=yes
-
-- name: Create 'named' user
-  user: name=named group=named uid=53 state=present system=yes home=/var/named shell=/sbin/nologin createhome=no
-
 - name: Reconfigure named to use user 'named'
   template: src=default.named.j2 dest=/etc/default/named owner=root group=root mode=0644
 
@@ -18,9 +9,6 @@
     - /var/named
     - /var/named/slave
     - /var/named/master
-
-- name: Chgrp /etc/rndc.key
-  file: path=/etc/rndc.key group=named mode=0640
 
 - name: Enable named
   file: path=/etc/rc.d/rc.bind mode=0755
