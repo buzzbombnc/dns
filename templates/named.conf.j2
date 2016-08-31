@@ -14,6 +14,12 @@ logging {
 # These addresses can query the cache.
 acl recurse-queries { {% for a in named_allow_recursion -%}{{ a }}; {% endfor -%} };
 
+{% if dns_keys|default(false) %}
+{% for k, v in dns_keys.iteritems() %}
+include "/etc/dnskeys/{{ k }}";
+{% endfor %}
+{% endif %}
+
 options {
     listen-on { {% for a in named_listen_on -%}{{ a }}; {% endfor -%} };
     listen-on-v6 { {% for a in named_listen_on_v6 -%}{{ a }}; {% endfor -%} };
