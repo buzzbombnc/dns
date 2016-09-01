@@ -70,5 +70,5 @@
  echo
  echo "The nameserver has been restarted to ensure that the update is complete."
  echo "The previous root.hints file is now called /var/named/root.hints.old."
-) 2>&1 | /usr/lib/sendmail -t
+) 2>&1 | /usr/sbin/sendmail -t
 exit 0
