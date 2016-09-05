@@ -18,10 +18,21 @@
   notify:
     - update-root-hints
 
+- name: Check bind status
+  command: /usr/sbin/rndc status
+  ignore_errors: true
+  register: bind_running
+  changed_when: false
+
 - name: Create /etc/named.conf file
   template: src=named.conf.j2 dest=/etc/named.conf owner=root group=root mode=0644 validate='/usr/sbin/named-checkconf %s'
   notify:
     - restart named
+
+- name: Freeze DNS zones
+  command: /usr/sbin/rndc freeze
+  changed_when: false
+  when: "bind_running.rc == 0"
 
 - name: Create master zone files
   template: src=named.zone.j2 dest="/var/named/master/{{ item.key }}" owner=named group=named mode=0644 validate='/usr/sbin/named-checkzone {{ item.key }} %s'
@@ -29,3 +40,8 @@
   when: "item.value.type == 'master'"
   notify:
     - restart named
+
+- name: Thaw DNS zones
+  command: /usr/sbin/rndc thaw
+  changed_when: false
+  when: "bind_running.rc == 0"
