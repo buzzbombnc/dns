@@ -34,6 +34,11 @@
   changed_when: false
   when: "bind_running.rc == 0"
 
+- name: Sync DNS zones and clean journals
+  command: /usr/sbin/rndc sync -clean
+  changed_when: false
+  when: "bind_running.rc == 0"
+
 - name: Create master zone files
   template: src=named.zone.j2 dest="/var/named/master/{{ item.key }}" owner=named group=named mode=0644 validate='/usr/sbin/named-checkzone {{ item.key }} %s'
   with_dict: "{{ named_zones|default({}) }}"
