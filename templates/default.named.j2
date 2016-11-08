@@ -1,2 +1,11 @@
 {{ ansible_managed | comment }}
-NAMED_OPTIONS="-u named"
+# Username to use for named.
+NAMED_USER="named"
+
+# The actual options to pass to named.
+NAMED_OPTIONS="-u $NAMED_USER"
+
+# Slackware ships with these two directories root-owned by default.
+# Patches usually break ownership, so hack in this change to avoid changing the rc.bind start script.
+[[ -d /var/run/named ]] && chown -R "${NAMED_USER}:" /var/run/named
+[[ -d /var/named ]] && chown -R "${NAMED_USER}:" /var/named
