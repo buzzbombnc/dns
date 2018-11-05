@@ -1,0 +1,25 @@
+galaxy_info:
+  author: Ken Treadway
+  description: Ansible role to manage bind DNS zones.
+
+  # If the issue tracker for your role is not on github, uncomment the
+  # next line and provide a value
+  # issue_tracker_url: http://example.com/issue/tracker
+
+  license: MIT
+
+  # Probably (mostly) works in earlier, but this is all I've tested.
+  min_ansible_version: 2.4
+
+  platforms:
+    - name: Slackware
+      versions:
+        - 14.2
+
+  galaxy_tags:
+    - dns
+    - bind
+    - slackware
+
+dependencies:
+  - src: https://github.com/buzzbombnc/bind
