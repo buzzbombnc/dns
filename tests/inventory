@@ -1,0 +1,32 @@
+test_dnskey:
+  hosts:
+    localhost
+  vars:
+    test_dnskey:
+      algorithm: hmac-sha256
+      # DON'T USE THIS!
+      secret: "EFh57V/BI2BeR0QqEzBMfBiaGriOK0azJQHle8QkxPE="
+    named_zones:
+      master.local:
+        type: master
+        allow_transfer:
+          - 127.0.0.1
+        soa_contact: 'test.master.local.'
+        soa_ns: 'ns1.master.local.'
+        serial: 2018110501
+        records:
+          #   name,     TTL,    class,  type,   value,  value
+          - [ '',       '',     'IN',   'NS',           'ns1.master.local.' ]
+          - [ 'ns1',    '',     'IN',   'A',            '1.2.3.4' ]
+          - [ '',       '',     'IN',   'MX',   '10',   'arec.master.local.' ]
+          - [ 'arec',   '',     'IN',   'A',            '1.2.3.5' ]
+          - [ 'cname',  '',     'IN',   'CNAME',        'arec' ]
+        extra_options:
+          # This makes the zone authoritative and ensures that delegation works.
+          - "forwarders { };"
+      # Publically available DNS transfer zone.
+      zonetransfer.me:
+        type: slave
+        masters:
+          - 81.4.108.41
+          - 52.91.28.78
