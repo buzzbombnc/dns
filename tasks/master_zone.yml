@@ -1,0 +1,11 @@
+---
+- name: "Create master zone for {{ item.key }}"
+  template:
+    src: named.zone.j2
+    dest: "/var/named/master/{{ item.key }}"
+    owner: named
+    group: named
+    mode: 0644
+    validate: '/usr/sbin/named-checkzone {{ item.key }} %s'
+  notify:
+    - restart named

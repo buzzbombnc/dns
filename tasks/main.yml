@@ -40,12 +40,9 @@
   changed_when: false
   when: "bind_running.rc == 0"
 
-- name: Create master zone files
-  template: src=named.zone.j2 dest="/var/named/master/{{ item.key }}" owner=named group=named mode=0644 validate='/usr/sbin/named-checkzone {{ item.key }} %s'
+- include_tasks: master_zone.yml
   with_dict: "{{ named_zones|default({}) }}"
   when: "item.value.type == 'master'"
-  notify:
-    - restart named
 
 - name: Thaw DNS zones
   command: /usr/sbin/rndc thaw
