@@ -3,12 +3,6 @@ dns
 
 Ansible role to manage bind DNS zones.
 
-Requirements
-------------
-
-* Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For 
-instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
-
 Role Variables
 --------------
 
@@ -62,6 +56,7 @@ For master zones, these keys are needed:
 | extra_options         | false    | List of strings for extra zone options.                        |
 | allow_transfer        | false    | List of servers that can transfer this zone.                   |
 | records               | false    | List of DNS records for this zone.  (Information below.)       |
+| dynamic               | false    | Please see [Dynamic Master Zones](#dynamic-master-zones) below.|
 
 Master zone records are simple lists-of-lists that allow storing data in YAML by column:
 
@@ -82,6 +77,14 @@ In YAML syntax, this will appear like this:
       - [ '',       '',     '',     'MX',   10,     'mx.master_zone.' ]
 ...
 ```
+
+Dynamic Master Zones
+--------------------
+
+When a master zone is defined as `dynamic`, care is taken to filter out any existing dynamic entries to add them
+to the new zone.
+
+The primary use case is for using this playbook to update a server's DNS zones that DHCP also updates.
 
 DNS Keys
 --------

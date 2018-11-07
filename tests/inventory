@@ -30,3 +30,20 @@ test_dnskey:
         masters:
           - 81.4.108.41
           - 52.91.28.78
+      dynamicmaster.local:
+        type: master
+        dynamic: true
+        soa_contact: 'test.dynamicmaster.local.'
+        soa_ns: 'ns1.dynamicmaster.local.'
+        serial: 2018110501
+        records:
+          #   name,     TTL,    class,  type,   value,  value
+          - [ '',       '',     'IN',   'NS',           'ns1.dynamicmaster.local.' ]
+          - [ 'ns1',    '',     'IN',   'A',            '1.2.4.5' ]
+          - [ '',       '',     'IN',   'MX',   '10',   'arec.dynamicmaster.local.' ]
+          - [ 'arec',   '',     'IN',   'A',            '1.2.4.5' ]
+          - [ 'cname',  '',     'IN',   'CNAME',        'arec' ]
+        extra_options:
+          # This makes the zone authoritative and ensures that delegation works.
+          - "forwarders { };"
+          - "update-policy { grant test_dnskey zonesub any; };"

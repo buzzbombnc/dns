@@ -1,0 +1,46 @@
+---
+- name: "Build temp directory for working dynamic master zone {{ item.key }}"
+  tempfile:
+    state: directory
+  register: tmpdir
+
+- stat:
+    path: "/var/named/master/{{ item.key }}"
+  register: existing_zone
+  
+- name: Gather existing zone data
+  command: "/usr/sbin/named-compilezone -j -F text -w /var/named/master -o {{ tmpdir.path }}/existing {{ item.key }} {{ item.key }}"
+  when: existing_zone.stat.exists
+
+- name: Build new zone data
+  template:
+    src: named.zone.j2
+    dest: "{{ tmpdir.path }}/new_zone"
+
+- name: Compile new zone data
+  command: "/usr/sbin/named-compilezone -j -F text -o new {{ item.key }} new_zone"
+  args:
+    chdir: "{{ tmpdir.path }}"
+
+- name: Combine existing dynamic and new zone data
+  script: filter-existing.sh
+  args:
+    chdir: "{{ tmpdir.path }}"
+  when: existing_zone.stat.exists
+
+- name: Copy zone to correct location
+  copy:
+    src: "{{ tmpdir.path }}/new_zone"
+    remote_src: true
+    dest: "/var/named/master/{{ item.key }}"
+    owner: named
+    group: named
+    mode: 0644
+    validate: '/usr/sbin/named-checkzone {{ item.key }} %s'
+  notify:
+    - restart named
+
+- name: Clean up temporary directory
+  file:
+    path: "{{ tmpdir.path }}"
+    state: absent

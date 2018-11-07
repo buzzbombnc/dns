@@ -42,7 +42,11 @@
 
 - include_tasks: master_zone.yml
   with_dict: "{{ named_zones|default({}) }}"
-  when: "item.value.type == 'master'"
+  when: "item.value.type == 'master' and item.value.dynamic|default(False) == False"
+
+- include_tasks: dynamic_master_zone.yml
+  with_dict: "{{ named_zones|default({}) }}"
+  when: "item.value.type == 'master' and item.value.dynamic|default(False) == True"
 
 - name: Thaw DNS zones
   command: /usr/sbin/rndc thaw
