@@ -13,7 +13,6 @@ test_dnskey:
           - 127.0.0.1
         soa_contact: 'test.master.local.'
         soa_ns: 'ns1.master.local.'
-        serial: 2018110501
         records:
           #   name,     TTL,    class,  type,   value,  value
           - [ '',       '',     'IN',   'NS',           'ns1.master.local.' ]
@@ -35,7 +34,6 @@ test_dnskey:
         dynamic: true
         soa_contact: 'test.dynamicmaster.local.'
         soa_ns: 'ns1.dynamicmaster.local.'
-        serial: 2018110501
         records:
           #   name,     TTL,    class,  type,   value,  value
           - [ '',       '',     'IN',   'NS',           'ns1.dynamicmaster.local.' ]

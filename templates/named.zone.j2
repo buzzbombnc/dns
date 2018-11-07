@@ -3,7 +3,7 @@
 {% set records = item.value.records %}
 $TTL {{ value.default_ttl|default(value.soa_ttl)|default(named_soa_ttl)|mandatory }}
 @   IN   SOA   {{ value.soa_ns }}   {{ value.soa_contact }} (
-    {{ value.serial }} ; serial number
+    {{ value.serial|default(ansible_date_time.epoch) }} ; serial number
     {{ value.soa_refresh|default(named_soa_refresh) }} ; refresh
     {{ value.soa_retry|default(named_soa_retry) }} ; retry
     {{ value.soa_expire|default(named_soa_expire) }} ; expire

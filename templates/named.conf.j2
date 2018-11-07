@@ -40,6 +40,9 @@ options {
     hostname none;
     server-id none;
 
+    # Use UNIX epoch for zone serial number updates.
+    serial-update-method unixtime;
+
 {% for l in named_extra_options|default([]) %}
     {{ l }}
 {% endfor %}

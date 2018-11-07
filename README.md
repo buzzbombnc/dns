@@ -51,7 +51,7 @@ For master zones, these keys are needed:
 |:----------------------|:--------:|:---------------------------------------------------------------|
 | soa_contact           | true     | SOA record contact.                                            |
 | soa_ns                | true     | SOA primary master nameserver.                                 |
-| serial                | true     | Zone serial number.                                            |
+| serial                | false    | Zone serial number.  (Default: current UNIX timestamp)         |
 | default_ttl           | false    | Default TTL for the zone.                                      |
 | extra_options         | false    | List of strings for extra zone options.                        |
 | allow_transfer        | false    | List of servers that can transfer this zone.                   |
@@ -128,7 +128,6 @@ TODO
 ----
 
 * Convert records arrays to neater dictionaries?
-* Use epoch serials?
 
 Example Playbook
 ----------------
