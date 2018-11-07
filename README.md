@@ -124,6 +124,12 @@ Dependencies
 
 * [bind](https://github.com/buzzbombnc/bind) role
 
+TODO
+----
+
+* Convert records arrays to neater dictionaries?
+* Use epoch serials?
+
 Example Playbook
 ----------------
 
